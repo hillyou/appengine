@@ -10,6 +10,7 @@
 <c:set var="contextPath"><%=request.getContextPath()%></c:set>
 <c:set var="acticle" value="${ARTICLE}"></c:set>
 <script type="text/javascript" src="${contextPath}/js/jquery/jquery.js" type="text/javascript"></script>
+<script type="text/javascript" src="${contextPath}/js/jquery/jquery-ui.js"></script>
 <script type="text/javascript" src="${contextPath}/js/article.js"></script>
 <title>${acticle.title}</title>
 </head>
@@ -18,10 +19,12 @@
        <div>${acticle.title}</div>
        <div>${acticle.content}</div>
     </div>
-    <div>
+    <div class="commentslist">
         <c:forEach var="comment" items="${acticle.comments}">
-            <div>${comment.commentBy} at <fmt:formatDate value="${comment.commentDate}" pattern="MM/dd/yyyy hh:mm" /></div>
-            <div>${comment.content}</div>
+            <div class="commentitem">
+	            <div>${comment.commentBy} at <fmt:formatDate value="${comment.commentDate}" pattern="MM/dd/yyyy hh:mm" /></div>
+	            <div><c:out escapeXml="true" value="${comment.content}"></c:out></div>
+            </div>
         </c:forEach>
     </div>
     <div id="message"></div>
