@@ -3,8 +3,9 @@ package com.hico.vish.dao.table;
 import java.util.Date;
 import java.util.List;
 
+import javax.jdo.annotations.Element;
+import javax.jdo.annotations.FetchGroup;
 import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -12,7 +13,8 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
+@FetchGroup(name = "fullArticle", members = { @Persistent(name = "comments") }) 
 public class Article {
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -33,8 +35,11 @@ public class Article {
 	private boolean isValid=true;
 	@Persistent
 	private boolean isPublished;
-	
 	@Persistent
+	private boolean isOpenComment=true;
+	
+	@Persistent(mappedBy = "article")
+	@Element(dependent = "true")
 	private List<Comment> comments;
 	
 	public Article() {
@@ -183,6 +188,20 @@ public class Article {
 	 */
 	public void setPublished(boolean isPublished) {
 		this.isPublished = isPublished;
+	}
+	
+	/**
+	 * @return the isOpenComment
+	 */
+	public boolean isOpenComment() {
+		return isOpenComment;
+	}
+
+	/**
+	 * @param isOpenComment the isOpenComment to set
+	 */
+	public void setOpenComment(boolean isOpenComment) {
+		this.isOpenComment = isOpenComment;
 	}
 
 	@Override

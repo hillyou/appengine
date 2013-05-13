@@ -1,10 +1,14 @@
 package com.hico.vish.dao.processor;
 
+import java.util.List;
+
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
 import javax.jdo.Transaction;
 
 import com.hico.vish.dao.table.Article;
+import com.hico.vish.dao.table.Comment;
 
 public class ArticleDao {
 
@@ -16,9 +20,25 @@ public class ArticleDao {
 		try {
 			transaction.begin();
 			persistenceManager.makePersistent(article);
-			System.out.println(article);
 			transaction.commit();
 		}catch(Exception ex) {
+			ex.printStackTrace();
+			if(transaction.isActive()) {
+				transaction.rollback();
+			}
+		}
+	}
+	
+	public void saveComment(Comment comment) {
+		PersistenceManager  persistenceManager=persistenceManagerFactory.getPersistenceManager();
+		Transaction transaction=persistenceManager.currentTransaction();
+		try {
+			transaction.begin();
+			persistenceManager.makePersistent(comment);
+			System.out.println(comment);
+			transaction.commit();
+		}catch(Exception ex) {
+			ex.printStackTrace();
 			if(transaction.isActive()) {
 				transaction.rollback();
 			}
@@ -27,9 +47,21 @@ public class ArticleDao {
 
 	public Article get(Long id) {
 		PersistenceManager  persistenceManager=persistenceManagerFactory.getPersistenceManager();
+		persistenceManager.setDetachAllOnCommit(true); 
+		persistenceManager.getFetchPlan().addGroup("fullArticle");
 		Article article=persistenceManager.getObjectById(Article.class,id);
-		Article detachCopy=persistenceManager.detachCopy(article);
-		return detachCopy;
+		return article;
+	}
+	
+	
+	public List<Article> getArticleList(){
+		PersistenceManager  persistenceManager=persistenceManagerFactory.getPersistenceManager();
+		Query query=persistenceManager.newQuery(Article.class);
+		List<Article> articles=(List<Article>) query.execute();
+		for(Article article:articles ) {
+			System.out.println(article);
+		}
+		return articles;
 	}
 	
 	/**

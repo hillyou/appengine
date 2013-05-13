@@ -1,15 +1,25 @@
 package com.hico.vish.manager;
 
 import java.util.Date;
+import java.util.List;
 
 import com.hico.vish.dao.processor.ArticleDao;
 import com.hico.vish.dao.table.Article;
+import com.hico.vish.dao.table.Comment;
 
 public class ArticleManager {
 	private ArticleDao articleDao;
 	
+	public void saveComment(Comment comment) {
+		articleDao.saveComment(comment);
+	}
+	
 	public Article getById(Long id) {
 		return articleDao.get(id);
+	}
+	
+	public List<Article> getArticleList(){
+		return articleDao.getArticleList();
 	}
 	
 	public void save(Article article) {

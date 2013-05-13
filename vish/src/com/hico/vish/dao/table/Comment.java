@@ -9,12 +9,14 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class Comment {
 
-	@PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Key key;
+//	@PrimaryKey
+//    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+//	private Key key;
+	@Persistent
+	private Article article;
 	@Persistent
 	private String content;
 	@Persistent
@@ -27,18 +29,39 @@ public class Comment {
 	private boolean isValid=true;
 	@Persistent
 	private boolean isPublished=true;
-	/**
-	 * @return the key
-	 */
-	public Key getKey() {
-		return key;
+	
+	public Comment() {}
+	
+	public Comment(String content) {
+		this.content=content;
 	}
+//	/**
+//	 * @return the key
+//	 */
+//	public Key getKey() {
+//		return key;
+//	}
+//	/**
+//	 * @param key the key to set
+//	 */
+//	public void setKey(Key key) {
+//		this.key = key;
+//	}
+	
 	/**
-	 * @param key the key to set
+	 * @return the article
 	 */
-	public void setKey(Key key) {
-		this.key = key;
+	public Article getArticle() {
+		return article;
 	}
+
+	/**
+	 * @param article the article to set
+	 */
+	public void setArticle(Article article) {
+		this.article = article;
+	}
+
 	/**
 	 * @return the content
 	 */
